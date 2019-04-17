@@ -6,6 +6,7 @@ package insatll:
     urlib3  
     json  
     requests  
+
 # Steps for get the feature of posters
 ## step 1:
     download the posters to the machine:run the get_poster.py , download the posters to /posters/  
