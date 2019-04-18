@@ -18,4 +18,5 @@ if __name__ == '__main__':
 
     # Start downloading posters.
     start_download(os.path.join(os.getcwd(), "data", "poster_info.txt"),
-                   poster_dir_path)
+                   poster_dir_path,
+                   is_sync=False)
