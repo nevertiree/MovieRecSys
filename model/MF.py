@@ -10,21 +10,23 @@ import numpy as np
 from sklearn import cross_validation as cv
 import matplotlib.pyplot as plt
 
+
 class MF(object):
-    '''
-    implement Matrix Factorization(data-P*Q) for Recommend System
-    '''
+    """ implement Matrix Factorization(data-P*Q) for Recommend System """
 
     def __init__(self):
-        '''
+        """
         To get the train_data and test_data
         Load data "rating.csv", Data format is shown as following, the last column is not very important
         userId,movieId,rating,timestamp
         1,31,2.5,1260759144
-        '''
+        """
+
         self.tab = pd.read_csv('ratings.csv')
-        self.useri, self.frequsers = np.unique(self.tab.userId, return_counts=True)
-        self.itemi, self.freqitems = np.unique(self.tab.movieId, return_counts=True)
+        self.useri, self.frequsers = np.unique(self.tab.userId,
+                                               return_counts=True)
+        self.itemi, self.freqitems = np.unique(self.tab.movieId,
+                                               return_counts=True)
         self.n_users = len(self.useri)
         self.n_items = len(self.itemi)
 
@@ -39,12 +41,17 @@ class MF(object):
         x = []
         y = []
         for i in range(0, len(self.tab)):
-            x.append((self.indice_user.indice[self.indice_user.useri == self.tab.userId[i]].axes[0] + 1)[0])
-            y.append((self.indice_item.indice[self.indice_item.itemi == self.tab.movieId[i]].axes[0] + 1)[0])
+            x.append((self.indice_user.indice[
+                self.indice_user.useri == self.tab.userId[i]].axes[0] + 1)[0])
+            y.append((self.indice_item.indice[
+                self.indice_item.itemi == self.tab.movieId[i]].axes[0] + 1)[0])
 
         self.tab["userIdnew"] = x
         self.tab["movieIdnew"] = y
-        self.train_data, self.test_data = cv.train_test_split(self.tab[["userIdnew", "movieIdnew", "rating"]], test_size=0.25,random_state=123)
+        self.train_data, self.test_data = cv.train_test_split(
+            self.tab[["userIdnew", "movieIdnew", "rating"]],
+            test_size=0.25,
+            random_state=123)
 
     def factorize(self, train_data, test_data, steps, alpha, gamma, k, m, n):
         '''
@@ -91,13 +98,18 @@ class MF(object):
         :param R: train_data or test_data
         :return:  loss
         '''
-        return np.sqrt(np.sum((I * (R - self.prediction(P, Q))) ** 2) / len(R[R > 0]))
+        return np.sqrt(
+            np.sum((I * (R - self.prediction(P, Q)))**2) / len(R[R > 0]))
 
     def prediction(self, P, Q):
-        '''
+        """
         To predict
-        '''
+        :param P:
+        :param Q:
+        :return:
+        """
         return np.dot(P.T, Q)
+
 
 if __name__ == '__main__':
 
@@ -115,7 +127,9 @@ if __name__ == '__main__':
     steps = 150
     gamma = 0.001
 
-    test_errors, train_errors = mf.factorize(train_data_matrix, test_data_matrix,  steps, alpha, gamma, k, m, n)
+    test_errors, train_errors = mf.factorize(train_data_matrix,
+                                             test_data_matrix, steps, alpha,
+                                             gamma, k, m, n)
     print('RMSE : ' + str(np.mean(test_errors)))
 
     plt.plot(range(steps), train_errors, marker='o', label='Training Data')
@@ -127,4 +141,3 @@ if __name__ == '__main__':
     plt.grid()
     plt.savefig('./test.jpg')
     plt.show()
-
