@@ -8,12 +8,16 @@ package insatll:
     requests  
 
 # Steps for get the feature of posters
-## step 1:
-    download the posters to the machine:run the get_poster.py , download the posters to /posters/  
-    input: python get_poster.py  
+
+## step 1: Prepare training data
+
+    1. Download movie posters to /data/posters/
+
+    `python get_poster.py`
 
 ## step 2:
-    use the feature_vgg16.py to extract the feature of poster with identical imdb_id,you should write code like this:  
+
+    Use the feature_vgg16.py to extract the feature of poster with identical imdb_id,you should write code like this:
     example : you want to get the imdb_id='1111' movie poster's feature  
     code example:  
     import feature_vgg  

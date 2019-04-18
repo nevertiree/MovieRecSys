@@ -10,16 +10,16 @@ tmdb.API_KEY = '75b3949a04006bebf98471a9410d4309'
 
 
 def poster_path_get(save_path, start_num, range_num):
-    """ use this func to get the movies that have poster
+    """ use this func to get the movies that have image
         :param save_path
         :param start_num
         :param range_num
     """
     global base_url
-    poster_set = set()  # store the poster id we have get
+    poster_set = set()  # store the image id we have get
 
     with open(save_path, 'w') as f:
-        """ get the poster from the imdb """
+        """ get the image from the imdb """
         for idx in range(start_num, range_num):
             print(idx)
             try:
@@ -30,13 +30,14 @@ def poster_path_get(save_path, start_num, range_num):
                         movie['imdb_id']
                     ) + ',' + base_url + movie['poster_path'] + '\n'
                     f.write(str_content)
-                    poster_set.add(
-                        movie['id'])  # add the id to the set. so there is no copy
+
+                    # add the id to the set. so there is no copy
+                    poster_set.add(movie['id'])
             except:
                 continue
 
 
-def download_poster(poster_name, poster_url, poster_path):
+def _download_poster(poster_name, poster_url, poster_path):
     print(poster_name, poster_url)
     with open(os.path.join(poster_path,
                            poster_name + '.jpg'),
@@ -46,8 +47,8 @@ def download_poster(poster_name, poster_url, poster_path):
 
 
 def start_download(url_file_path, poster_store_path):
-    """ Download movie poster.
-        :param url_file_path: The path of file which stores the movie poster URLs.
+    """ Download movie image.
+        :param url_file_path: The path of file which stores the movie image URLs.
         :param poster_store_path: The path to store the downloaded movie posters.
     """
 
@@ -56,6 +57,6 @@ def start_download(url_file_path, poster_store_path):
             line = url_file.readline()
             if not line:
                 break
-            # Get the poster name and url
+            # Get the image name and url
             poster_name, poster_url = line.split(sep=',')
-            download_poster(poster_name, poster_url, poster_store_path)
+            _download_poster(poster_name, poster_url, poster_store_path)
