@@ -32,6 +32,11 @@ class Feature_Extract_Poster():
         result = result.data.cpu().numpy() # return the cpu data
         return result
 
+    def correlation_cal(self, imdb_id_a, imdb_id_b):
+        """
+        
+        """
+
 if __name__ == '__main__':
     fep = Feature_Extract_Poster()
     print(fep.extract_feature('1'))
