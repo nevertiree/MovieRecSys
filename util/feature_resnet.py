@@ -42,9 +42,14 @@ class Feature_Extract_Poster():
         result = self.pool_3d(self.model(img)) 
         result = torch.flatten(result)  # get the flatten feature vector
         result = result.data.cpu().numpy()  # return the cpu data
+        
+        result_str = ''
+        for data_ in result: # concat the data
+           result_str += str(round(data_, 4)) + '|'
+        #print(result_str[:-1], 'the size is')
         #print(result.size, 'the size is')
 
-        return result
+        return result_str[:-1]
 
     def correlation_cal_matrix(self):
         """
@@ -81,11 +86,6 @@ if __name__ == '__main__':
     feature_1 = fep.extract_feature('1')
     feature_2 = fep.extract_feature('2')
     feature_3 = fep.extract_feature('3')
-    feature_4 = fep.extract_feature('4')
-    feature_5 = fep.extract_feature('5')
-    feature_6 = fep.extract_feature('6')
-    feature_7 = fep.extract_feature('7')
-    feature_8 = fep.extract_feature('8')
     features = (feature_1, feature_2, feature_3, feature_4, feature_5, feature_6, feature_7, feature_8)
     features_ = features
     for  feature_ in features_:
