@@ -1,6 +1,8 @@
 import numpy as np
 from PIL import Image
 
+import os
+
 import torch
 import torch.nn as nn
 import torchvision.models as models
@@ -10,13 +12,13 @@ import torchvision.transforms as transforms
 class Feature_Extract_Poster():
     """ use this module to get the feature of pics with the special imdb_id """
 
-    def __init__(self):
+    def __init__(self, poster_path="posters/"):
         self.model = models.resnet18(pretrained=True).eval()
         self.model = nn.Sequential(*list(self.model.children())[:-1])
-        self.poster_path = 'posters/'  # the path of the input pic
-        self.target_img_size = 256 # the size of VGG input pic
-        self.svd_size = (512, 256) # the multiply must equal to 128*64
-        self.pool_3d = torch.nn.MaxPool3d((4, 2, 2), stride=4) # 3-d pool 
+        self.poster_path = poster_path  # the path of the input pic
+        self.target_img_size = 256  # the size of VGG input pic
+        self.svd_size = (512, 256)  # the multiply must equal to 128*64
+        self.pool_3d = torch.nn.MaxPool3d((4, 2, 2), stride=4)  # 3-d pool
 
     def extract_feature(self, imdb_id):
         """
@@ -25,7 +27,12 @@ class Feature_Extract_Poster():
         |imdb_id:str, the imdb id you want to get
         """
         try:
-            img = Image.open(self.poster_path + imdb_id + '.jpg')  # get the posters
+            if not imdb_id.endswith("jpg"):
+                img_path = os.path.join(self.poster_path, imdb_id+".jpg")
+            else:
+                img_path = os.path.join(self.poster_path, imdb_id)
+            print(img_path)
+            img = Image.open(img_path)  # get the posters
         except FileNotFoundError:
             return None  # there is no  movie according to this imdbid
 
@@ -44,7 +51,7 @@ class Feature_Extract_Poster():
         result = result.data.cpu().numpy()  # return the cpu data
         
         result_str = ''
-        for data_ in result: # concat the data
+        for data_ in result:  # concat the data
            result_str += str(round(data_, 4)) + '|'
         #print(result_str[:-1], 'the size is')
         #print(result.size, 'the size is')
@@ -80,15 +87,9 @@ class Feature_Extract_Poster():
 
 
 if __name__ == '__main__':
-    fep = Feature_Extract_Poster()  # for test
+    fep = Feature_Extract_Poster("../../data/image")  # for test
 
     """ get two feature to test the correlation func """
     feature_1 = fep.extract_feature('1')
     feature_2 = fep.extract_feature('2')
     feature_3 = fep.extract_feature('3')
-    features = (feature_1, feature_2, feature_3, feature_4, feature_5, feature_6, feature_7, feature_8)
-    features_ = features
-    for  feature_ in features_:
-        print('-------------')
-        print([fep.correlation_cal_single(feature_, feature)[0]  for feature in features])
-            
